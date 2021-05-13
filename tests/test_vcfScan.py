@@ -3,7 +3,10 @@ import os
 from pathlib import Path
 import pytest
 
-from vcfScan import BinomialTest,vcfScan,lineageScan
+from src.vcfScan import BinomialTest,vcfScan,lineageScan
+
+SOURCE_DIR = os.path.abspath(__file__)
+test_vcf_file = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')))
 
 def test_BinomialTest():
     """ test binomial test computation """
@@ -39,7 +42,7 @@ def test_vcfScan2():
     v = vcfScan()
     v.add_roi('One', set([]))
 
-    inputfile = os.path.join('..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+    inputfile = test_vcf_file
     assert os.path.exists(inputfile), 'Input file does not exist.  Please see README.  You may need to install test data.'
 
     v.parse(vcffile=inputfile)
@@ -49,7 +52,7 @@ def test_vcfScan2():
 def test_vcfScan_3():
     """ tests reading when the info tag does not exist """
     v = vcfScan(infotag='missing')
-    inputfile = os.path.join('..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+    inputfile = test_vcf_file
     assert os.path.exists(inputfile), 'Input file does not exist.  Please see README.  You may need to install test data.'
     v.add_roi('One', [1, 2, 3])
 
@@ -63,7 +66,7 @@ def test_vcfScan_4():
     v.add_roi('One', set([1, 2, 3]))
     v.add_roi('Two', set([2, 3, 4]))
 
-    inputfile = os.path.join('..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+    inputfile = test_vcf_file
     assert os.path.exists(inputfile), 'Input file does not exist.  Please see README.  You may need to install test data.'
     v.parse(vcffile=inputfile)
     assert len(v.bases.index) == 6
@@ -72,7 +75,7 @@ def test_vcfScan_4():
 def test_lineageScan():
     """ tests Loading branch information for deep branches """
     v = lineageScan()
-    inputfile = os.path.join('..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+    inputfile = test_vcf_file
     assert os.path.exists(inputfile), 'Input file does not exist.  Please see README.  You may need to install test data.'
 
     res = v.parse(vcffile=inputfile, guid='528')

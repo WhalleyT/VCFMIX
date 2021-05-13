@@ -30,6 +30,7 @@ import tables
 
 from Bio import SeqIO
 
+SOURCE_DIR = os.path.abspath(__file__)
 
 class FastaMixtureMarker():
     """ writes codes reflecting mixed base calls into a fasta file """
@@ -528,8 +529,8 @@ class lineageScan(vcfScan):
 
     def __init__(self,
                  expectedErrorRate=0.001,
-                 lineage_definition_file='../data/refdata/Coll2014_LinSpeSNPs_final.csv',
-                 exclusion_position_file='../data/refdata/exclusion_nt.txt',
+                 lineage_definition_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'refdata', 'Coll2014_LinSpeSNPs_final.csv'))),
+                 exclusion_position_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'refdata', 'exclusion_nt.txt'))),
                  infotag='BaseCounts4'
                  ):
         """ creates a vcfScan object.
@@ -546,6 +547,7 @@ class lineageScan(vcfScan):
         self.psn2roi = dict()
         self.expectedErrorRate = expectedErrorRate
         self.infotag = infotag
+        self.fieldtag = None
         self.excluded = set()
         self.report_minimum_maf = 0
         self.compute_pvalue = True
