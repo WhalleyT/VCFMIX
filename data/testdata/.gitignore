@@ -1,0 +1,5 @@
+*.gz
+*.txt
+*.db
+*.vcf.gz
+*.fasta
