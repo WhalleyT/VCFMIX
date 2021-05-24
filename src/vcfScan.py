@@ -32,6 +32,7 @@ from Bio import SeqIO
 
 SOURCE_DIR = os.path.abspath(__file__)
 
+
 class FastaMixtureMarker():
     """ writes codes reflecting mixed base calls into a fasta file """
 
@@ -392,7 +393,7 @@ class vcfScan():
                 if pos == sought_now:
                     # we are looking for a position in the vcf file, and we have found it;
                     alts = alts.split(",")
-                    alts = [i for i in alts if i in ['A','T','C','G']]
+                    alts = [i for i in alts if i in ['A', 'T', 'C', 'G']]
                     infos = dict(item.split("=") for item in infos.split(";"))
                     fields = fields.split(':')
                     sampleInfo = sampleInfo.split(':')
@@ -410,7 +411,7 @@ class vcfScan():
                             raise KeyError("auto detection of infotag required, but neither AD nor BaseCounts4 tags found ")
 
                     # parse self.infotag/self.fieldtag to extract baseCounts
-                    if self.infotag is not None: #infotag is either AD or BaseCounts4
+                    if self.infotag is not None:  # infotag is either AD or BaseCounts4
                         try:
                             baseCounts = list(map(int, infos[self.infotag].split(",")))  # get frequencies of high quality bases
                         except KeyError:
@@ -425,16 +426,15 @@ class vcfScan():
                         except KeyError:
                             raise KeyError("Expected a tag {0} in the 'fields' component of the call file, but it was not there.  Keys present are: {1}".format(self.fieldtag, fields))
 
-
-                    if self.infotag == 'AD' or self.fieldtag == 'AD':		# then this is a vcf file made by samtools mpileup with -t INFO/AD or -t AD flag
+                    if self.infotag == 'AD' or self.fieldtag == 'AD':  # then this is a vcf file made by samtools mpileup with -t INFO/AD or -t AD flag
                         # and we need to extract the data accordingly from the ref and alt columns.
                         # bases which are not mentioned in the ALT are zero
                         basedict = {'A': 0, 'C': 0, 'G': 0, 'T': 0}
                         # gather basecounts from the AD tag; first element is REF depth, subsequent elements are ALT depths
                         basedict[ref] = baseCounts[0]
-                        counter=0
+                        counter = 0
                         for alt in alts:
-                            counter+=1
+                            counter += 1
                             basedict[alt] = baseCounts[counter]
                         # and generate a baseCounts corresponding to that produced by GATK VariantAnnotator
                         baseCounts = [basedict['A'], basedict['C'], basedict['G'], basedict['T']]
@@ -567,10 +567,10 @@ class lineageScan(vcfScan):
     def parse(self, vcffile, guid):
         """ parses a vcffile.
 
-        Inputs: 
+        Inputs:
             vcffile: the vcffile to scan
 
-        Outputs: 
+        Outputs:
             self.region_stats contains minor variant calls in the regions defined.
             self.bases are the bases included in the regions of interest (only)
 
@@ -580,7 +580,7 @@ class lineageScan(vcfScan):
         To export output, after calling parse to
         obj.region_stats.to_csv(filename)
 
-        To generate f2 and f50 statistics, as described in publication, call
+        To generate f2 and f47 statistics, as described in publication, call
         obj.f_statistics()
 
         """
@@ -590,7 +590,7 @@ class lineageScan(vcfScan):
         return(None)
 
     def f_statistics(self, filename=None):
-        """ computes F2 and F50 summary statistics.
+        """ computes F2 and F47 summary statistics.
             If filename is None (default) then it computes them on self.region_stats.
             If the filename is not none, and exists, it assumes that the file is csv data containing region statistics, as
             exported by obj.region_stats.to_csv(filename).  It loads this data, and reports it.
@@ -617,23 +617,22 @@ class lineageScan(vcfScan):
             if len(self.region_stats) < 58:		# lineage defining sites were not computed
                 return({'mixture_quality': 'bad',
                         'F2': None,
-                        'F50': None})
+                        'F47': None})
 
             else:
                 sorted_region_stats = self.region_stats.sort_values(by='mean_maf', ascending=False)
                 f2_denominator = sum(sorted_region_stats['total_depth'].head(2))
-                f50_denominator = sum(sorted_region_stats['total_depth'].tail(50))
+                f47_denominator = sum(sorted_region_stats['total_depth'].tail(47))
 
-                # trap for the situation in which there are no reads, so F2 and F50 can't be computed (divide-by-zero)
-                if f2_denominator == 0 or f50_denominator == 0:
+                # trap for the situation in which there are no reads, so F2 and F47 can't be computed (divide-by-zero)
+                if f2_denominator == 0 or f47_denominator == 0:
                     return({'mixture_quality': 'bad',
                             'F2': None,
-                            'F50': None})
+                            'F47': None})
                 else:
                     f2 = sum(sorted_region_stats['total_nonmajor_depth'].head(2)) / f2_denominator
-                    f50 = sum(sorted_region_stats['total_nonmajor_depth'].tail(50)) / f50_denominator
+                    f47 = sum(sorted_region_stats['total_nonmajor_depth'].tail(47)) / f47_denominator
 
                     return({'mixture_quality': 'OK',
                             'F2': f2,
-                            'F50': f50})
-
+                            'F47': f47})

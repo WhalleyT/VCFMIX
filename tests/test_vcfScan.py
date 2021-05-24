@@ -3,17 +3,18 @@ import os
 from pathlib import Path
 import pytest
 
-from src.vcfScan import BinomialTest,vcfScan,lineageScan
+from src.vcfScan import BinomialTest, vcfScan, lineageScan
 
 SOURCE_DIR = os.path.abspath(__file__)
 test_vcf_file = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')))
+
 
 def test_BinomialTest():
     """ test binomial test computation """
     bt = BinomialTest(0.001)
 
     retVal = bt.compute(0, 0)
-    assert retVal == (None,None)
+    assert retVal == (None, None)
 
     retVal = bt.compute(1, 1)
     assert retVal == (1, 0)
@@ -97,7 +98,7 @@ def test_lineageScan():
     summary1 = v.f_statistics()
 
     assert isinstance(summary1, dict)
-    assert set(summary1.keys()) == set(['mixture_quality', 'F2', 'F50'])
+    assert set(summary1.keys()) == set(['mixture_quality', 'F2', 'F47'])
 
     # compute summary with persisted csv data
     summary2 = v.f_statistics(outputfile)
