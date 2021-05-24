@@ -27,6 +27,7 @@ setup(
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
     description="VCFMIX allows identification of, and quantification of mixtures of, high quality bases within VCF files. It is designed for use with reference mapped bacterial sequences.",
     install_requires=requirements,
