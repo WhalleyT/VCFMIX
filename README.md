@@ -1,3 +1,5 @@
+[![Python package](https://github.com/AlexOrlek/VCFMIX/actions/workflows/python_versions.yml/badge.svg)](https://github.com/AlexOrlek/VCFMIX/actions/workflows/python_versions.yml)
+
 # Find sites at which multiple high-quality sequences map within VCF files
 Allows identification of, and quantification of mixtures of, high quality bases within VCF files.  It is designed for use with reference mapped bacterial sequences.
 
