@@ -2,11 +2,17 @@
 import os
 from pathlib import Path
 import pytest
+import urllib.request
 
 from src.vcfScan import BinomialTest, vcfScan, lineageScan
 
 SOURCE_DIR = os.path.abspath(__file__)
 test_vcf_file = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')))
+
+# first download test data (vcf file)
+if not os.path.exists(test_vcf_file):
+    url = 'https://ora.ox.ac.uk/objects/uuid:5e4ec1f8-e212-47db-8910-161a303a0757/download_file?file_format=x-tar&safe_filename=52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz&type_of_work=Dataset'
+    urllib.request.urlretrieve(url, test_vcf_file)
 
 
 def test_BinomialTest():
