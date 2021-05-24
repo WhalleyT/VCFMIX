@@ -2,7 +2,7 @@
 import os
 import sys
 import pathlib
-from vcfScan import FastaMixtureMarker, vcfScan
+from src.vcfScan import FastaMixtureMarker, vcfScan
 from Bio.Seq import Seq
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord

@@ -29,30 +29,31 @@ Note that test data in the example below is not included when the github project
 you need to download a test data file manually.
 
 ```
-cd testdata
+cd data/testdata
 wget --no-check-certificate -O 52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz "https://ora.ox.ac.uk/objects/uuid:5e4ec1f8-e212-47db-8910-161a303a0757/download_file?file_format=x-tar&safe_filename=52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz&type_of_work=Dataset"
 ```
 
 ### Example using lineageScan to compute F2 and F47 statistics
 ( see also [scientific rationale](https://www.ncbi.nlm.nih.gov/pubmed/30209183) )
 
+The below example is in misc/lineagescan_example.py
+
 ```
 import os
-from vcfmix import lineageScan
+from src.vcfScan import lineageScan
 
 # create a lineagescan object;
 v = lineageScan()
 
-
 # scan an input file
-inputfile=os.path.join("..",'testdata','52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+inputfile=os.path.join('..', 'data', 'testdata','52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
 res = v.parse(vcffile = inputfile, guid='528')
 
 # print details of the regions scanned
 print(v.regions_stats)
 
 # export details of the regions scanned
-outputfile = os.path.join('..','unitTest_tmp','528.txt')
+outputfile = os.path.join('unitTest_tmp','528.txt')
 v.region_stats.to_csv(outputfile)
 
 # compute F2 and F47 statistics (see publication)
@@ -64,13 +65,14 @@ summary1 = v.f_statistics()
 ( see also [scientific rationale]( http://biorxiv.org/cgi/content/short/681502v1); the output is an input for the [findNeighbour3 server](https://github.com/davidhwyllie/findNeighbour3)).
 
 
-The below example is in /src/fmm_example.py.
+The below example is in misc/fmm_example.py.
 
 ```
 """ Example of use of FastaMixtureMarker """
 import os
+import sys
 import pathlib
-from vcfScan import FastaMixtureMarker, vcfScan
+from src.vcfScan import FastaMixtureMarker, vcfScan
 from Bio.Seq import Seq
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
@@ -87,14 +89,14 @@ for i in range(4411532):
     v.add_roi(str(1+i),set([1+i]))
     
 print('parsing vcf')
-inputfile=os.path.join("..",'testdata','52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+inputfile=os.path.join('..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
 if not os.path.exists(inputfile):
-    self.fail("Input file does not exist.  Please see README.  You may need to install test data.")
+    sys.fail("Input file does not exist.  Please see README.  You may need to install test data.")
 v.parse(vcffile = inputfile)
 print("Parse complete; writing output")
 
 # make sure a target directory exists
-targetdir = os.path.join("..", "unitTest_tmp")		# a writeable directory
+targetdir = os.path.join('unitTest_tmp')		# a writeable directory
 pathlib.Path(targetdir).mkdir(parents=True, exist_ok=True)
 
 # write mixed bases to a csv file   
@@ -102,7 +104,7 @@ mixfile = os.path.join(targetdir,'output_table.txt')
 v.bases.to_csv(mixfile, index=None)
 
 # the fasta file used contains high confidence single base base calls.  Example is from PHE TB pipeline https://github.com/oxfordmmm/CompassCompact
-fastafile=os.path.join("..",'testdata','52858be2-7020-4b7f-acb4-95e00019a7d7_v3.fasta')
+fastafile=os.path.join('..', 'data', 'testdata','52858be2-7020-4b7f-acb4-95e00019a7d7_v3.fasta')
 fmm = FastaMixtureMarker(expectedErrorRate = 0.001, mlp_cutoff=6.65, clustering_cutoff = 10, min_maf=0)			
 df, seq = fmm.mark_mixed(fastafile, mixfile)
 
