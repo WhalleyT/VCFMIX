@@ -157,7 +157,7 @@ for GUID in missing:
 
         if os.path.exists(FASTAFILE):
             print("Keeping original fasta file")
-            #os.unlink(FASTAFILE)
+            # os.unlink(FASTAFILE)
 
 print("Complete.  Skipped {0} files, which had already been processed.".format(nSkipped))
 print("Successfully processed {0} files.".format(nSucceeded))

@@ -381,7 +381,8 @@ class vcfScan():
                 # sought_now position after or at the current vcf scan position, pos
                 if not pos <= sought_now:
                     if warning_emitted is False:
-                        logging.warn("Note: not all positions are called in vcf file: gap observed nr bases {1}..{0}; adjusting scan.  Results should not be affected.  Subsequent similar warnings will not be shown.".format(pos, sought_now))
+                        logging.warn("Note: not all positions are called in vcf file: gap observed nr bases {1}..{0}; adjusting scan.\
+                            Results should not be affected. Subsequent similar warnings will not be shown.".format(pos, sought_now))
                         warning_emitted = True
                     while sought_now <= pos:
                         try:
