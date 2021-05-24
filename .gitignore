@@ -137,5 +137,6 @@ data/testdata/*.vcf
 data/testdata/*.vcf.gz
 data/testdata/NC_0103971.1.gb
 data/testdata/readme.txt
+tests/parse_testing.py
 
 
