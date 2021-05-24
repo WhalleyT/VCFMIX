@@ -26,7 +26,6 @@ pluggy==0.13.1
 prompt-toolkit==3.0.18
 ptyprocess==0.7.0
 py==1.10.0
-pycodestyle==2.6.0
 pycparser==2.20
 Pygments==2.8.1
 pyparsing==2.4.7
@@ -43,7 +42,7 @@ toml==0.10.2
 tornado==6.1
 tox==3.23.1
 tox-conda==0.8.0
-traitlets==5.0.5
+traitlets>=4.3
 tzlocal==2.1
 virtualenv==20.4.6
 wcwidth==0.2.5
