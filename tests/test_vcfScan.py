@@ -8,6 +8,7 @@ from src.vcfScan import BinomialTest, vcfScan, lineageScan
 
 SOURCE_DIR = os.path.abspath(__file__)
 test_vcf_file = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')))
+tmp_output_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'misc', 'unitTest_tmp')))
 
 # first download test data (vcf file)
 if not os.path.exists(test_vcf_file):
@@ -91,9 +92,8 @@ def test_lineageScan():
     assert len(v.region_stats.index) == 64
 
     # check file export works
-    targetdir = os.path.join('..', 'misc', 'unitTest_tmp')
-    Path(targetdir).mkdir(parents=True, exist_ok=True)
-    outputfile = os.path.join(targetdir, '528.txt')
+    Path(tmp_output_dir).mkdir(parents=True, exist_ok=True)
+    outputfile = os.path.join(tmp_output_dir, '528.txt')
     if os.path.exists(outputfile):
         os.unlink(outputfile)
 
