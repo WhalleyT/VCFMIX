@@ -2,9 +2,10 @@
 import os
 import sys
 import urllib.request
-SOURCE_DIR = os.path.abspath(__file__)
-src_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'src')))
-testdata_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata')))
+from pathlib import Path
+SOURCE_DIR = Path(__file__).parent.absolute()
+src_dir = os.path.join(SOURCE_DIR, '..', 'src')
+testdata_dir = os.path.join(SOURCE_DIR, '..', 'data', 'testdata')
 sys.path.append(src_dir)
 from vcfScan import lineageScan
 

@@ -6,9 +6,9 @@ import urllib.request
 
 from src.vcfScan import BinomialTest, vcfScan, lineageScan
 
-SOURCE_DIR = os.path.abspath(__file__)
-test_vcf_file = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')))
-tmp_output_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'misc', 'unitTest_tmp')))
+SOURCE_DIR = Path(__file__).parent.absolute()
+test_vcf_file = os.path.join(SOURCE_DIR, '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+tmp_output_dir = os.path.join(SOURCE_DIR, '..', 'misc', 'unitTest_tmp')
 
 # first download test data (vcf file)
 if not os.path.exists(test_vcf_file):

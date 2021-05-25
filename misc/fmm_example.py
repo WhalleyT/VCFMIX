@@ -2,14 +2,14 @@
 import os
 import sys
 import urllib.request
-import pathlib
+from pathlib import Path
 from Bio.Seq import Seq
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_dna
-SOURCE_DIR = os.path.abspath(__file__)
-src_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'src')))
-testdata_dir = os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', '..', 'data', 'testdata')))
+SOURCE_DIR = Path(__file__).parent.absolute()
+src_dir = os.path.join(SOURCE_DIR, '..', 'src')
+testdata_dir = os.path.join(SOURCE_DIR, '..', 'data', 'testdata')
 sys.path.append(src_dir)
 from vcfScan import FastaMixtureMarker, vcfScan
 
@@ -33,13 +33,13 @@ print("Parse complete; writing output")
 
 # make sure a target directory exists
 targetdir = os.path.join(SOURCE_DIR, 'unitTest_tmp')  # a writeable directory
-pathlib.Path(targetdir).mkdir(parents=True, exist_ok=True)
+Path(targetdir).mkdir(parents=True, exist_ok=True)
 
 # write mixed bases to a csv file
 mixfile = os.path.join(targetdir, 'output_table.txt')
 v.bases.to_csv(mixfile, index=None)
 
-# the fasta file used contains high confidence single base base calls.  Example is from PHE TB pipeline https://github.com/oxfordmmm/CompassCompact
+# the fasta file used contains high confidence single base base calls. Example is from PHE TB pipeline https://github.com/oxfordmmm/CompassCompact
 fastafile = os.path.join(testdata_dir, '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.fasta')
 fmm = FastaMixtureMarker(expectedErrorRate=0.001, mlp_cutoff=6.65, clustering_cutoff=10, min_maf=0)
 df, seq = fmm.mark_mixed(fastafile, mixfile)
