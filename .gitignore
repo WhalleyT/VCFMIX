@@ -133,10 +133,20 @@ OLD/
 README
 TESTING/
 TEMP
+
+data/testdata/e73b328d-e703-48e6-bad6-96dcb3f4a20a_v3_samtools.vcf
 data/testdata/*.vcf
 data/testdata/*.vcf.gz
 data/testdata/NC_0103971.1.gb
 data/testdata/readme.txt
-tests/parse_testing.py
-misc/unitTest_tmp/*
+data/refdata/update_to_H37Rv_v3
 
+tests/parse_testing.py
+tests/tests_output/*
+
+examples/topup.sh
+examples/examples_output/*
+
+vcfmix/picklist.sh
+vcfmix/testpick.txt
+vcfmix/transform.py

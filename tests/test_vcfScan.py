@@ -4,11 +4,11 @@ from pathlib import Path
 import pytest
 import urllib.request
 
-from src.vcfScan import BinomialTest, vcfScan, lineageScan
+from vcfmix.vcfScan import BinomialTest, vcfScan, lineageScan
 
 SOURCE_DIR = Path(__file__).parent.absolute()
 test_vcf_file = os.path.join(SOURCE_DIR, '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
-tmp_output_dir = os.path.join(SOURCE_DIR, '..', 'misc', 'unitTest_tmp')
+tmp_output_dir = os.path.join(SOURCE_DIR, 'tests_output')
 
 # first download test data (vcf file)
 if not os.path.exists(test_vcf_file):
@@ -86,7 +86,7 @@ def test_lineageScan():
     inputfile = test_vcf_file
     assert os.path.exists(inputfile), 'Input file does not exist.  Please see README.  You may need to install test data.'
 
-    res = v.parse(vcffile=inputfile, guid='528')
+    res = v.parse(vcffile=inputfile, sample_id='528')
     assert res is None
 
     assert len(v.region_stats.index) == 64

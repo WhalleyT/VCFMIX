@@ -8,9 +8,9 @@ from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import generic_dna
 SOURCE_DIR = Path(__file__).parent.absolute()
-src_dir = os.path.join(SOURCE_DIR, '..', 'src')
+vcfmix_dir = os.path.join(SOURCE_DIR, '..', 'vcfmix')
 testdata_dir = os.path.join(SOURCE_DIR, '..', 'data', 'testdata')
-sys.path.append(src_dir)
+sys.path.append(vcfmix_dir)
 from vcfScan import FastaMixtureMarker, vcfScan
 
 print('set up vcfScan object.. (only needs to be done once)')
@@ -32,7 +32,7 @@ res = v.parse(vcffile=test_vcf_file)
 print("Parse complete; writing output")
 
 # make sure a target directory exists
-targetdir = os.path.join(SOURCE_DIR, 'unitTest_tmp')  # a writeable directory
+targetdir = os.path.join(SOURCE_DIR, 'examples_output')  # a writeable directory
 Path(targetdir).mkdir(parents=True, exist_ok=True)
 
 # write mixed bases to a csv file
