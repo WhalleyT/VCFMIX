@@ -134,7 +134,6 @@ README
 TESTING/
 TEMP
 
-data/testdata/e73b328d-e703-48e6-bad6-96dcb3f4a20a_v3_samtools.vcf
 data/testdata/*.vcf
 data/testdata/*.vcf.gz
 data/testdata/NC_0103971.1.gb
