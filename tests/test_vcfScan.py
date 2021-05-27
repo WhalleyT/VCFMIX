@@ -1,13 +1,14 @@
 #!/usr/bin/env python
 import os
+import sys
 from pathlib import Path
 import pytest
 import urllib.request
-
-from vcfmix.vcfScan import BinomialTest, vcfScan, lineageScan
+from vcfmix.vcfScan import BinomialTest, vcfScan, lineageScan, FastaMixtureMarker
 
 SOURCE_DIR = Path(__file__).parent.absolute()
 test_vcf_file = os.path.join(SOURCE_DIR, '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.vcf.gz')
+test_fasta_file = os.path.join(SOURCE_DIR, '..', 'data', 'testdata', '52858be2-7020-4b7f-acb4-95e00019a7d7_v3.fasta')
 tmp_output_dir = os.path.join(SOURCE_DIR, 'tests_output')
 
 # first download test data (vcf file)
@@ -109,3 +110,74 @@ def test_lineageScan():
     # compute summary with persisted csv data
     summary2 = v.f_statistics(outputfile)
     assert summary1 == summary2
+
+
+def test_FastaMixtureMarker_1():
+    """ tests annotation of fasta with mixed bases when pvalues are not computed by vcfScan """
+    v = vcfScan(expectedErrorRate=0.001, infotag='BaseCounts4', report_minimum_maf=0.05, compute_pvalue=False)
+
+    # add 100k regions
+    for i in range(100000):
+        v.add_roi(str(1 + i), set([1 + i]))
+
+    # parse vcf file
+    inputfile = test_vcf_file
+    sample_id = os.path.basename(inputfile)[0:36]
+    if not os.path.exists(inputfile):
+        sys.exit("Input file does not exist.  Please see README.  You may need to install test data.")
+    v.parse(vcffile=inputfile)
+
+    Path(tmp_output_dir).mkdir(parents=True, exist_ok=True)
+    mixfile = os.path.join(tmp_output_dir, '{0}.txt'.format(sample_id))
+    if os.path.exists(mixfile):
+        os.unlink(mixfile)
+
+    v.bases.to_csv(mixfile, index=None)
+    assert os.path.exists(mixfile), 'mixfile has not been generated'
+
+    # read outputfile
+    fmm = FastaMixtureMarker(0.001, 6.65)
+    df, seq = fmm.mark_mixed(test_fasta_file, mixfile)
+
+    iupac = ['A', 'C', 'G', 'T', 'r', 'R', 'w', 'W', 'y', 'Y', 'm', 'M', 's', 'S', 'k', 'K']
+    resDict = {}
+    for item in iupac:
+        resDict[item] = seq.count(item)
+    assert resDict['R'] == 7
+    assert resDict['A'] == 704539
+
+
+def test_FastaMixtureMarker_2():
+    """ tests annotation of fasta with mixed bases when pvalues are computed by vcfScan """
+    v = vcfScan(expectedErrorRate=0.001, infotag='BaseCounts4', report_minimum_maf=0.05, compute_pvalue=True)
+
+    # add 100k regions
+    for i in range(100000):
+        v.add_roi(str(1 + i), set([1 + i]))
+
+    # parse vcf file
+    inputfile = test_vcf_file
+    sample_id = os.path.basename(inputfile)[0:36]
+    if not os.path.exists(inputfile):
+        sys.exit("Input file does not exist.  Please see README.  You may need to install test data.")
+    v.parse(vcffile=inputfile)
+
+    Path(tmp_output_dir).mkdir(parents=True, exist_ok=True)
+    mixfile = os.path.join(tmp_output_dir, '{0}.txt'.format(sample_id))
+    if os.path.exists(mixfile):
+        os.unlink(mixfile)
+
+    v.bases.to_csv(mixfile, index=None)
+    assert os.path.exists(mixfile), 'mixfile has not been generated'
+
+    # read outputfile
+    fmm = FastaMixtureMarker(0.001, 6.65)
+    df, seq = fmm.mark_mixed(test_fasta_file, mixfile)
+
+    iupac = ['A', 'C', 'G', 'T', 'r', 'R', 'w', 'W', 'y', 'Y', 'm', 'M', 's', 'S', 'k', 'K']
+    resDict = {}
+    for item in iupac:
+        resDict[item] = seq.count(item)
+    assert resDict['R'] == 7
+    assert resDict['A'] == 704539
+

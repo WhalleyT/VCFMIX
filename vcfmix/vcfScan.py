@@ -65,7 +65,7 @@ class FastaMixtureMarker():
         }
 
     def mark_mixed(self, seq_file, mixed_bases_file):
-        """ annotations fasta with mixed bases, using IUPAC codes.
+        """ annotate fasta with mixed bases, using IUPAC codes.
 
         Inputs:
             seq_file: a fasta file.
@@ -91,6 +91,7 @@ class FastaMixtureMarker():
                         seq = list(record.seq)
             except Exception as e:
                 return None, e
+
         # read outputfile, if there are any columns
         try:
             df = pd.read_csv(mixed_bases_file, index_col='pos')
