@@ -65,6 +65,11 @@ v.region_stats.to_csv(outputfile)
 summary1 = v.f_statistics()
 print(summary1)
 
+# save F2 and F47 statistics to json
+f_stats_outputfile = os.path.join(SOURCE_DIR, 'examples_output', '528_f_stats.json')
+with open(f_stats_outputfile, 'w') as f: 
+    json.dump(summary1, f)
+
 ```
 
 ### Example using lineageScan and FastaMixtureMasker to generate a consensus fasta file
