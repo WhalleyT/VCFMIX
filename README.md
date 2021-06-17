@@ -36,6 +36,7 @@ The code below is from examples/lineagescan_example.py
 import os
 import sys
 import urllib.request
+import json
 from pathlib import Path
 SOURCE_DIR = Path(__file__).parent.absolute()
 vcfmix_dir = os.path.join(SOURCE_DIR, '..', 'vcfmix')

@@ -191,7 +191,7 @@ class vcfScan():
 
     def __init__(self,
                  expectedErrorRate=0.001,
-                 infotag='BaseCounts4',
+                 infotag='auto',
                  report_minimum_maf=0,
                  compute_pvalue=True):
         """ creates a vcfScan object.
@@ -449,10 +449,6 @@ class vcfScan():
                         raise TypeError("Expected tag {0} to contain 4 depths, but {1} found.  Base = {2}; tag contents are {3}".format(self.infos, len(baseFreqs), pos, baseCounts))
                     depth = sum(baseCounts)
 
-                    # assert vcf format is as expected 
-                    assert 'DP4' in infos, 'DP4 tag missing'
-                    assert sum(map(int, infos['DP4'].split(','))) == depth, 'sum of DP4 depths expected to equal sum of AD depths'
-
                     # compute probability that the minor variant frequency differs from self.expectedErrorRate from exact binomial test
                     pvalue = None
                     mlp = None
@@ -538,7 +534,7 @@ class lineageScan(vcfScan):
                  expectedErrorRate=0.001,
                  lineage_definition_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', 'data', 'refdata', 'Coll2014_LinSpeSNPs_final.csv'))),
                  exclusion_position_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', 'data', 'refdata', 'exclusion_nt.txt'))),
-                 infotag='BaseCounts4'
+                 infotag='auto'
                  ):
         """ creates a vcfScan object.
         Inputs:
