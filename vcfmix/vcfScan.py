@@ -189,7 +189,7 @@ class vcfScan():
 
     """
 
-    def __init__(self,
+    def __init__ (self,
                  expectedErrorRate=0.001,
                  infotag='auto',
                  report_minimum_maf=0,
@@ -324,7 +324,7 @@ class vcfScan():
             False, if it did not, for example due to file truncation
         """
         self.sample_id = sample_id
-        self._parse(vcffile)
+        self._parse(vcffile, minos)
 
     def _parse(self, vcffile):
         """ parses a vcffile.
@@ -397,9 +397,19 @@ class vcfScan():
                     # we are looking for a position in the vcf file, and we have found it;
                     alts = alts.split(",")
                     alts = [i for i in alts if i in ['A', 'T', 'C', 'G']]
-                    infos = dict(item.split("=") for item in infos.split(";"))
+
+                    if self.minos == False:
+                        infos = dict(item.split("=") for item in infos.split(";"))
+                    else:
+                        infos = {}
+                        split_items = fields.split(":")
+                        n_items = len(split_items)
+                        for i in range(0, n_items):
+                            infos[split_items[i]] = i + n_items
+
                     fields = fields.split(':')
                     sampleInfo = sampleInfo.split(':')
+
 
                     # autodetect: if self.infotag is 'auto' and AD tag present, use that
                     if self.infotag == 'auto':
@@ -534,7 +544,8 @@ class lineageScan(vcfScan):
                  expectedErrorRate=0.001,
                  lineage_definition_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', 'data', 'refdata', 'Coll2014_LinSpeSNPs_final.csv'))),
                  exclusion_position_file=os.path.abspath(os.path.normpath(os.path.join(SOURCE_DIR, '..', 'data', 'refdata', 'exclusion_nt.txt'))),
-                 infotag='auto'
+                 infotag='auto',
+                 minos = True
                  ):
         """ creates a vcfScan object.
         Inputs:
@@ -554,6 +565,7 @@ class lineageScan(vcfScan):
         self.excluded = set()
         self.report_minimum_maf = 0
         self.compute_pvalue = True
+        self.minos = True
         if exclusion_position_file is not None:
             excluded_positions = pd.read_table(exclusion_position_file, sep=',', header=0)
             self.excluded = set(excluded_positions['pos'].tolist())
@@ -567,7 +579,7 @@ class lineageScan(vcfScan):
             self.add_roi(roi_name, roi_psns)
         self.bt = BinomialTest(self.expectedErrorRate)
 
-    def parse(self, vcffile, sample_id):
+    def  parse(self, vcffile, sample_id):
         """ parses a vcffile.
 
         Inputs:
