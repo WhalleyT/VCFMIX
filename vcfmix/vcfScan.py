@@ -324,7 +324,7 @@ class vcfScan():
             False, if it did not, for example due to file truncation
         """
         self.sample_id = sample_id
-        self._parse(vcffile, minos)
+        self._parse(vcffile)
 
     def _parse(self, vcffile):
         """ parses a vcffile.
@@ -565,7 +565,7 @@ class lineageScan(vcfScan):
         self.excluded = set()
         self.report_minimum_maf = 0
         self.compute_pvalue = True
-        self.minos = True
+        self.minos = minos
         if exclusion_position_file is not None:
             excluded_positions = pd.read_table(exclusion_position_file, sep=',', header=0)
             self.excluded = set(excluded_positions['pos'].tolist())
